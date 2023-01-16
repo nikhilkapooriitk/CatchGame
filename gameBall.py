@@ -1,4 +1,6 @@
 import pygame
+import random
+import math
 from config import *
 
 class GameBall:
@@ -12,12 +14,18 @@ class GameBall:
         self.ball = pygame.Surface((size, size))
         self.ball.fill((0, 255, 0))
 
-    def update_position(self):
+    def update_position(self, playerBall):
         # Save the previous position
         self.prev_x = self.x
         self.prev_y = self.y
-        self.x += self.speed
-        self.y += self.speed
+
+        perpendicularVector = [-playerBall.y + self.y , playerBall.x - self.x ]
+        modOfVector = math.sqrt(perpendicularVector[0]*perpendicularVector[0] + perpendicularVector[1]*perpendicularVector[1])
+
+        step1 = random.uniform(-BALL_SPEED,BALL_SPEED)
+        step2 = math.sqrt(BALL_SPEED - abs(step1))
+        self.x += BALL_SPEED * perpendicularVector[0]/modOfVector
+        self.y += BALL_SPEED * perpendicularVector[1]/modOfVector
 
         # Check if the ball goes outside the window and change direction
         if self.x + self.size > WINDOW_WIDTH or self.x < 0:

@@ -26,7 +26,7 @@ while running:
 
     keys = pygame.key.get_pressed()
     player_ball.update_position(keys)
-    game_ball.update_position()
+    game_ball.update_position(player_ball)
 
     # Check for collision between the two balls
     if (player_ball.x < game_ball.x < player_ball.x + BALL_SIZE and
