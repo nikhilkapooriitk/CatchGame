@@ -1,21 +1,18 @@
 import pygame
 from pygame.locals import *
+from gameBall import GameBall
+from playerBall import PlayerBall
+from config import *
 
 # Initialize Pygame and create the game window
 pygame.init()
-width, height = 800, 600
-screen = pygame.display.set_mode((width, height))
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
-# Create the stationary and moving balls
-stationary_ball = pygame.Surface((50, 50))
-moving_ball = pygame.Surface((50, 50))
+# Create the player moved ball
+player_ball = PlayerBall(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, BALL_SIZE)
 
-stationary_ball.fill((255, 0, 0))
-moving_ball.fill((0, 255, 0))
-
-# Set the initial positions of the balls on the screen
-stationary_ball_pos = (width/2, height/2)
-moving_ball_pos = (width/2, 50)
+# Create the auto moving ball
+game_ball = GameBall(WINDOW_WIDTH/2, 0, BALL_SIZE)
 
 # Create a clock to control the frame rate
 clock = pygame.time.Clock()
@@ -24,21 +21,23 @@ clock = pygame.time.Clock()
 running = True
 while running:
     for event in pygame.event.get():
-        if event.type == QUIT:
+        if event.type == pygame.QUIT:
             running = False
 
-    # Move the moving ball in a random direction
-    moving_ball_pos = (moving_ball_pos[0] + 5, moving_ball_pos[1] + 5)
+    keys = pygame.key.get_pressed()
+    player_ball.update_position(keys)
+    game_ball.update_position()
 
     # Check for collision between the two balls
-    if (stationary_ball_pos[0] < moving_ball_pos[0] < stationary_ball_pos[0] + 50 and
-            stationary_ball_pos[1] < moving_ball_pos[1] < stationary_ball_pos[1] + 50):
+    if (player_ball.x < game_ball.x < player_ball.x + BALL_SIZE and
+            player_ball.y < game_ball.y < player_ball.y + BALL_SIZE):
         print("You caught the moving ball! You win!")
         running = False
 
-    # Update the positions of the balls on the screen
-    screen.blit(stationary_ball, stationary_ball_pos)
-    screen.blit(moving_ball, moving_ball_pos)
+    # Draw the player ball and game ball on the screen
+    player_ball.draw(screen)
+    game_ball.draw(screen)
+
     pygame.display.update()
     clock.tick(30)
 

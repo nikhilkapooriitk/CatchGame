@@ -1,0 +1,34 @@
+import pygame
+from config import *
+from pygame.locals import *
+
+class PlayerBall:
+    def __init__(self, x, y, size):
+        self.x = x
+        self.y = y
+        self.size = size
+        self.speed = 5
+        self.prev_x = self.x
+        self.prev_y = self.y
+        self.ball = pygame.Surface((size, size))
+        self.ball.fill((255, 0, 0))
+
+    def update_position(self, keys):
+        # Save the previous position
+        self.prev_x = self.x
+        self.prev_y = self.y
+
+        if keys[K_LEFT]:
+            self.x -= 5
+        if keys[K_RIGHT]:
+            self.x += 5
+        if keys[K_UP]:
+            self.y -= 5
+        if keys[K_DOWN]:
+            self.y += 5
+
+    def draw(self, screen):
+        # Delete the ball from the previous position
+        pygame.draw.rect(screen, (0, 0, 0), (self.prev_x, self.prev_y, self.size, self.size))
+        # Draw the ball on the new position
+        screen.blit(self.ball, (self.x, self.y))
