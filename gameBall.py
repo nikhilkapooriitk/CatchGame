@@ -23,9 +23,9 @@ class GameBall:
         modOfVector = math.sqrt(perpendicularVector[0]*perpendicularVector[0] + perpendicularVector[1]*perpendicularVector[1])
 
         step1 = random.uniform(-BALL_SPEED,BALL_SPEED)
-        step2 = math.sqrt(BALL_SPEED - abs(step1))
-        self.x += BALL_SPEED * perpendicularVector[0]/modOfVector
-        self.y += BALL_SPEED * perpendicularVector[1]/modOfVector
+        step2 = math.sqrt(abs(BALL_SPEED) - abs(step1))
+        self.x += self.speed * perpendicularVector[0]/modOfVector
+        self.y += self.speed * perpendicularVector[1]/modOfVector
 
         # Check if the ball goes outside the window and change direction
         if self.x + self.size > WINDOW_WIDTH or self.x < 0:
