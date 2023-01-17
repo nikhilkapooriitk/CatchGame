@@ -1,6 +1,7 @@
 import pygame
 from config import *
 from pygame.locals import *
+import math
 
 class PlayerBall:
     def __init__(self, x, y, size):
@@ -13,19 +14,26 @@ class PlayerBall:
         self.ball = pygame.Surface((size, size))
         self.ball.fill((255, 0, 0))
 
-    def update_position(self, keys):
+    def update_position(self, keys, GameBall):
         # Save the previous position
         self.prev_x = self.x
         self.prev_y = self.y
 
-        if keys[K_LEFT]:
-            self.x -= BALL_SPEED
-        if keys[K_RIGHT]:
-            self.x += BALL_SPEED
-        if keys[K_UP]:
-            self.y -= BALL_SPEED
-        if keys[K_DOWN]:
-            self.y += BALL_SPEED
+        #getting direction
+        x_dir, y_dir = GameBall.x - self.x , GameBall.y - self.y
+        dir_mod = math.sqrt(x_dir*x_dir + y_dir*y_dir)
+
+        self.x += BALL_SPEED*x_dir/dir_mod 
+        self.y += BALL_SPEED*y_dir/dir_mod
+
+        # if keys[K_LEFT]:
+        #     self.x -= BALL_SPEED
+        # if keys[K_RIGHT]:
+        #     self.x += BALL_SPEED
+        # if keys[K_UP]:
+        #     self.y -= BALL_SPEED
+        # if keys[K_DOWN]:
+        #     self.y += BALL_SPEED
 
     def draw(self, screen):
         # Delete the ball from the previous position
