@@ -7,7 +7,7 @@ class PlayerBall:
         self.x = x
         self.y = y
         self.size = size
-        self.speed = 5
+        self.speed = BALL_SPEED
         self.prev_x = self.x
         self.prev_y = self.y
         self.ball = pygame.Surface((size, size))
@@ -19,13 +19,13 @@ class PlayerBall:
         self.prev_y = self.y
 
         if keys[K_LEFT]:
-            self.x -= 5
+            self.x -= BALL_SPEED
         if keys[K_RIGHT]:
-            self.x += 5
+            self.x += BALL_SPEED
         if keys[K_UP]:
-            self.y -= 5
+            self.y -= BALL_SPEED
         if keys[K_DOWN]:
-            self.y += 5
+            self.y += BALL_SPEED
 
     def draw(self, screen):
         # Delete the ball from the previous position
