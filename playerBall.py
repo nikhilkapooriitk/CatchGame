@@ -23,8 +23,8 @@ class PlayerBall:
         x_dir, y_dir = GameBall.x - self.x , GameBall.y - self.y
         dir_mod = math.sqrt(x_dir*x_dir + y_dir*y_dir)
 
-        self.x += BALL_SPEED*x_dir/dir_mod 
-        self.y += BALL_SPEED*y_dir/dir_mod
+        self.x += (BALL_SPEED-1)*x_dir/dir_mod 
+        self.y += (BALL_SPEED-1)*y_dir/dir_mod
 
         # if keys[K_LEFT]:
         #     self.x -= BALL_SPEED

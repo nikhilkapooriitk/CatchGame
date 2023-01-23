@@ -1,4 +1,4 @@
-set hour=36000
+set hour=360000
 set /a counter=0
 
 :loop

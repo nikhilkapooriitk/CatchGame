@@ -33,7 +33,7 @@ while running:
     # Check for collision between the two balls
     if (player_ball.x < game_ball.x < player_ball.x + BALL_SIZE and
             player_ball.y < game_ball.y < player_ball.y + BALL_SIZE):
-        game_ball.saveQTable()
+        game_ball.saveData()
         print("You caught the moving ball! You win!")
         running = False
 

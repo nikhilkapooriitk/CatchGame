@@ -3,6 +3,7 @@ import random
 import math
 from config import *
 import numpy as np
+import csv
 
 class GameBall:
     def __init__(self, x, y, size):
@@ -10,14 +11,18 @@ class GameBall:
         self.y = y
         self.size = size
         self.speed = BALL_SPEED
+        self.prev_distance_to_playerBall = 0
         self.prev_x = self.x
         self.prev_y = self.y
         self.ball = pygame.Surface((size, size))
         self.ball.fill((0, 255, 0))
 
-        self.possible_actions = [(BALL_SPEED, 0), (-BALL_SPEED, 0), (BALL_SPEED, 1), (0, -BALL_SPEED)] #up,down,left,right
+        self.rewards = []
+        self.total_Reward = 0
+        self.total_step = 0
+        self.possible_actions = [(BALL_SPEED, 0), (-BALL_SPEED, 0), (0, BALL_SPEED), (0, -BALL_SPEED)] #up,down,left,right
         self.state_size = (WINDOW_WIDTH, WINDOW_HEIGHT)
-#        self.q_table = np.zeros((self.state_size[0], self.state_size[1], len(self.possible_actions)))
+        # self.q_table = np.random.uniform(0, 0.1, (self.state_size[0], self.state_size[1], len(self.possible_actions)))
         
         # Loading the Q-table from a file
         self.q_table = np.load("q_table.npy")
@@ -42,9 +47,24 @@ class GameBall:
             action = self.possible_actions[np.argmax(self.q_table[state_x][state_y])]
 
 
-        # update Q-value
+        # update reward of this iteration
+        # if collision occur (-1), outside of box(-1), distance increase (1), distance decrease(0.5) 
         next_state = (self.x + action[0], self.y + action[1])
-        reward = -1 # negative reward for being caught
+        distance = math.sqrt( (next_state[0] - playerBall.x)**2 + (next_state[1] - playerBall.y)**2 )
+
+        if self.checkCollision(playerBall):
+            reward = -3
+        elif self.y + self.size > WINDOW_HEIGHT or self.y < 0 or self.x + self.size > WINDOW_WIDTH or self.x < 0:
+            reward = -1
+        elif distance >= self.prev_distance_to_playerBall:
+            reward = 5
+        else:
+            reward = 0.5
+
+        self.rewards.append(reward)
+        self.total_Reward += reward
+        self.total_step += 1
+        #update Q-value
         self.q_table[state_x][state_y][self.possible_actions.index(action)] = (1 - self.learning_rate) * self.q_table[state_x][state_y][self.possible_actions.index(action)] + self.learning_rate * (reward + self.discount_factor * max(self.q_table[int(next_state[0])][int(next_state[1])]))
 
         # move the ball
@@ -57,6 +77,10 @@ class GameBall:
         if self.y + self.size > WINDOW_HEIGHT or self.y < 0:
             self.y -= action[1]
 
+        #update new self.prev_distance_to_playerBall
+        self.prev_distance_to_playerBall = distance
+
+
 
     def draw(self, screen):
         # Delete the ball from the previous position
@@ -64,6 +88,31 @@ class GameBall:
         # Draw the ball on the new position
         screen.blit(self.ball, (self.x, self.y))
 
-    def saveQTable(self):
+    def saveData(self):
+        #save Q-table
         np.save("q_table.npy",self.q_table)
+
+        #save reward per step of this game
+        with open("rewardPerStepPerGame.csv", "a", newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(self.rewards)
+        self.rewards.clear()
+
+        #save total reward, total steps and avg reward of this game
+        row = [self.total_Reward, self.total_step, self.total_Reward/self.total_step]
+        with open("rewardPerGame.csv", "a", newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(row)
+
+
+
+
+    def checkCollision(self, playerBall):
+        if (playerBall.x < self.x < playerBall.x + BALL_SIZE and
+                playerBall.y < self.y < playerBall.y + BALL_SIZE):
+            return True
+        else:
+            return False
+
+
 
