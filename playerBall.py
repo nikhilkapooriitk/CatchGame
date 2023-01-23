@@ -26,15 +26,6 @@ class PlayerBall:
         self.x += (BALL_SPEED-1)*x_dir/dir_mod 
         self.y += (BALL_SPEED-1)*y_dir/dir_mod
 
-        # if keys[K_LEFT]:
-        #     self.x -= BALL_SPEED
-        # if keys[K_RIGHT]:
-        #     self.x += BALL_SPEED
-        # if keys[K_UP]:
-        #     self.y -= BALL_SPEED
-        # if keys[K_DOWN]:
-        #     self.y += BALL_SPEED
-
     def draw(self, screen):
         # Delete the ball from the previous position
         pygame.draw.rect(screen, (0, 0, 0), (self.prev_x, self.prev_y, self.size, self.size))

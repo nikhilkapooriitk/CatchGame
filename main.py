@@ -28,12 +28,11 @@ while running:
 
     keys = pygame.key.get_pressed()
     player_ball.update_position(keys, game_ball)
-    game_ball.update_position(player_ball)
+    game_ball.update_position(keys, player_ball)
 
     # Check for collision between the two balls
     if (player_ball.x < game_ball.x < player_ball.x + BALL_SIZE and
             player_ball.y < game_ball.y < player_ball.y + BALL_SIZE):
-        game_ball.saveData()
         print("You caught the moving ball! You win!")
         running = False
 
