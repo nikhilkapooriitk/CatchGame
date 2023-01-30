@@ -39,11 +39,11 @@ class GameBall:
         #move the ball
         if keys[K_LEFT]:
             self.x -= BALL_SPEED
-        elif keys[K_RIGHT]:
+        if keys[K_RIGHT]:
             self.x += BALL_SPEED
-        elif keys[K_UP]:
+        if keys[K_UP]:
             self.y -= BALL_SPEED
-        elif keys[K_DOWN]:
+        if keys[K_DOWN]:
             self.y += BALL_SPEED
 
 

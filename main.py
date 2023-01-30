@@ -41,7 +41,7 @@ while running:
     game_ball.draw(screen)
 
     pygame.display.update()
-    clock.tick(30)
+    clock.tick(60)
 
 # Quit Pygame when the game loop ends
 pygame.quit()
